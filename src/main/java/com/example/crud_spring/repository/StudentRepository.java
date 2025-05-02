@@ -10,7 +10,6 @@ import java.util.Optional;
 @Repository
 public class StudentRepository {  private final List<Student> students = new ArrayList<>();
     private long nextId = 1;
-
     public List<Student> findAll() {
         return students;
     }

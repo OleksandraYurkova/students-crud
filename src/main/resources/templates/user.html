@@ -1,0 +1,28 @@
+<!-- templates/students_user.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Список студентів (Користувач)</title>
+
+</head>
+<body>
+<div class="header">
+  <h1>Список студентів</h1>
+  <div class="user-greeting">
+    <span th:text="'Привіт, ' + ${user.username} + '!'">Привіт, користувачу!</span>
+  </div>
+</div>
+
+<div class="container">
+  <h2>Усі студенти</h2>
+  <div th:each="student : ${students}" class="student-item">
+    <div>
+      <span class="student-id" th:text="'ID: ' + ${student.id}"></span> -
+      <span th:text="${student.name}">Ім’я</span>,
+      <span th:text="${student.age}">Вік</span> років
+    </div>
+  </div>
+</div>
+</body>
+</html>

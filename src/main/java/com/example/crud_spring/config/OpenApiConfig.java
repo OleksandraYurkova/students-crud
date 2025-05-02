@@ -1,4 +1,4 @@
-package com.example.crud_spring;
+package com.example.crud_spring.config;
 
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;

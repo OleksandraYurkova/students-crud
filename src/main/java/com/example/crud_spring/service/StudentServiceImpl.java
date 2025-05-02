@@ -7,6 +7,9 @@ import com.example.crud_spring.repository.StudentRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +19,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
-
+    private final PasswordEncoder passwordEncoder;
     private final StudentRepository studentRepository;
 
     @Override
@@ -24,6 +27,7 @@ public class StudentServiceImpl implements StudentService {
         log.info("Отримання всіх студентів");
         return studentRepository.findAll();
     }
+
 
     @Override
     public Optional<Student> getStudentById(Long id) {
@@ -48,8 +52,5 @@ public class StudentServiceImpl implements StudentService {
         log.warn("Видалення студента з ID: {}", id);
         studentRepository.deleteById(id);
     }
-    public User getCurrentUser() {
-        // Імітуємо авторизованого користувача
-        return new User(1L, "Admin1", Set.of(new Role(1L, "Admin")));
-    }
+
 }

@@ -1,160 +1,66 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
 <head>
-    <title>Студенти</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f7fc;
-        }
-
-        .header {
-            background-color: #ffffff;
-            color: #000000;
-            font-size: 12px;
-            padding: 10px;
-            text-align: center;
-        }
-        .header p {
-            color: #000000;
-            font-size: 12px;
-            text-align: center;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .user-info {
-            margin-bottom: 20px;
-        }
-
-        .user-info p {
-            font-size: 16px;
-        }
-
-        .btn {
-            padding: 10px 15px;
-            font-size: 14px;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background-color: #00519a;
-            color: white;
-        }
-
-        .btn-warning {
-            background-color: #3f258f;
-            color: white;
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .students-list {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .students-list li {
-            background-color: #f9f9f9;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .students-list li p {
-            margin: 0;
-            flex-grow: 1;
-        }
-
-        .students-list form {
-            display: inline-block;
-        }
-
-        .students-list button {
-            padding: 6px 12px;
-            font-size: 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .alert {
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            color: white;
-        }
-
-        .alert-success {
-            background-color: #28a745;
-        }
-
-        .alert-error {
-            background-color: #dc3545;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <title>Список студентів</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<div class="header">
-    <h3>Ласкаво просимо до списку студентів!</h3>
-    <span th:text="${isAdmin != null and isAdmin ? 'Admin' : 'User'}">Admin</span>
-    </p>
+<body class="bg-light">
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0">Ласкаво просимо до списку студентів!</h2>
+            <p class="mb-0" th:text="'Привіт, ' + ${user.username} + '!'"></p>
+        </div>
+        <a href="/logout" class="btn btn-danger">Вийти</a>
+    </div>
+
+    <!-- Alerts -->
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <!-- Create new student -->
+    <div class="card mb-4">
+        <div class="card-header">Створити нового студента</div>
+        <div class="card-body">
+            <form th:action="@{/students}" th:object="${newStudent}" method="post" class="row g-3">
+                <div class="col-md-6">
+                    <label for="name" class="form-label">Ім'я:</label>
+                    <input type="text" id="name" th:field="*{name}" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="age" class="form-label">Вік:</label>
+                    <input type="number" id="age" th:field="*{age}" class="form-control" required>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Створити студента</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Student list -->
+    <div>
+        <h3>Список студентів</h3>
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center"
+                th:each="student : ${students}">
+                <span th:text="'ID: ' + ${student.id} + ' - ' + ${student.name} + ' - ' + ${student.age}">Студент</span>
+                <div>
+                    <a th:href="@{/students/edit/{id}(id=${student.id})}" class="btn btn-warning btn-sm me-2">Редагувати</a>
+                    <a th:href="@{/students/delete/{id}(id=${student.id})}" class="btn btn-danger btn-sm"
+                       onclick="return confirm('Ви дійсно хочете видалити студента?');">Видалити</a>
+                </div>
+            </li>
+        </ul>
+    </div>
 </div>
 
-
-<!-- Показуємо повідомлення про успіх або помилку -->
-<div th:if="${success}" class="alert alert-success">
-    <p th:text="${success}"></p>
-</div>
-<div th:if="${error}" class="alert alert-danger">
-    <p th:text="${error}"></p>
-</div>
-
-<!-- Показуємо ім'я та роль користувача -->
-
-
-<!-- Форма для створення нового студента -->
-<h2>Створити нового студента:</h2>
-<form th:action="@{/home}" th:object="${newStudent}" method="post">
-    <label for="name">Ім'я:</label>
-    <input type="text" id="name" th:field="*{name}" required="required"/>
-    <label for="age">Вік:</label>
-    <input type="number" id="age" th:field="*{age}" required="required"/>
-    <button type="submit" class="btn btn-primary">Створити студента</button>
-</form>
-
-<!-- Список студентів -->
-<h2>Список студентів:</h2>
-<ul>
-    <li th:each="student : ${students}">
-        <p th:text="'ID: ' + ${student.id} + ' - ' + ${student.name} + ' - ' + ${student.age}">Студент</p>
-
-        <!-- Кнопка для редагування студента -->
-        <a th:href="@{/home/edit/{id}(id=${student.id})}" class="btn btn-warning">Редагувати</a>
-
-        <!-- Кнопка для видалення студента -->
-        <a th:href="@{/home/delete/{id}(id=${student.id})}" class="btn btn-danger"
-           onclick="return confirm('Ви дійсно хочете видалити студента?');">Видалити</a>
-    </li>
-</ul>
-
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,5 +1,7 @@
 package com.example.crud_spring;
 
+import com.example.crud_spring.DTO.RequestStudentDTO;
+import com.example.crud_spring.DTO.ResponseStudentDTO;
 import com.example.crud_spring.models.Student;
 
 import java.time.LocalDateTime;
